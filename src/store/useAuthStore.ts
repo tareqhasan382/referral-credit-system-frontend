@@ -7,6 +7,7 @@ type User = {
     _id: string;
     name: string;
     email: string;
+    referralCode?: string;
 };
 
 type AuthState = {
@@ -42,7 +43,7 @@ const useAuthStore = create<AuthState>()(
 
                         set({
                             user: response?.data?.user || null,
-                            token: response?.data?.token || null,
+                            token: response?.data?.accessToken || null,
                         });
                     } catch (err: any) {
                         set({ error: err.message || "Registration failed" });
@@ -60,7 +61,7 @@ const useAuthStore = create<AuthState>()(
                                 body: JSON.stringify(payload),
                             }
                         );
-                        set({ user: data?.data?.user, token: data?.data?.token });
+                        set({ user: data?.data?.user, token: data?.data?.accessToken });
                     } catch (err: any) {
                         set({ error: err.message });
                     } finally {

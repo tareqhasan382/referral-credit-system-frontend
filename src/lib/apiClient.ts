@@ -8,17 +8,14 @@ export async function apiFetch<T>(
     endpoint: string,
     options: RequestInit = {}
 ): Promise<T> {
-    const token = useAuthStore.getState().token; // directly read from store (not reactive)
+    const token = useAuthStore.getState().token;
     const headers = new Headers(options.headers || {});
-
-    // Add JSON headers
     if (!headers.has("Content-Type")) {
         headers.set("Content-Type", "application/json");
     }
 
-    // Add Bearer token if logged in
     if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+        headers.set("Authorization", `${token}`);
     }
 
     const res = await fetch(`${getBaseUrl()}${endpoint}`, {
@@ -27,13 +24,17 @@ export async function apiFetch<T>(
     });
 
     if (!res.ok) {
-        const error = await res.text();
-        throw new Error(error || `HTTP ${res.status}`);
+        const text = await res.text();
+        try {
+            const json = JSON.parse(text);
+            throw new Error(json.message || `HTTP ${res.status}`);
+        } catch {
+            throw new Error(text || `HTTP ${res.status}`);
+        }
     }
 
-    // Automatically parse JSON if available
     const contentType = res.headers.get("Content-Type");
-    if (contentType && contentType.includes("application/json")) {
+    if (contentType?.includes("application/json")) {
         return res.json() as Promise<T>;
     }
 
