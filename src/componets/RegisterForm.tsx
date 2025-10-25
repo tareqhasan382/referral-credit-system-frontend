@@ -11,6 +11,7 @@ const RegisterForm: React.FC = () => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [referralCode, setReferralCode] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -24,12 +25,13 @@ const RegisterForm: React.FC = () => {
         }
         try {
             setIsLoading(true);
-            const payload: RegisterPayload = { name, email, password };
+            const payload: RegisterPayload = { name, email, password,referralCode };
             await registerUser(payload);
 
             setName('');
             setEmail('');
             setPassword('');
+            setReferralCode('')
 
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'An unknown registration error occurred.';
@@ -38,7 +40,7 @@ const RegisterForm: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [name, email, password, registerUser]);
+    }, [name, email, password, registerUser,referralCode]);
 
     return (
         <div className="flex items-center justify-center bg-gray-50">
@@ -99,6 +101,20 @@ const RegisterForm: React.FC = () => {
                             placeholder="Password (min 8 characters)"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            disabled={isLoading}
+                        />
+                    </div>
+                    {/* ReferralCode Input */}
+                    <div>
+                        <label htmlFor="name" className="sr-only">Referral Code (optional)</label>
+                        <input
+                            id="referralCode"
+                            type="text"
+                            required
+                            className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Referral Code"
+                            value={referralCode}
+                            onChange={(e) => setReferralCode(e.target.value)}
                             disabled={isLoading}
                         />
                     </div>
