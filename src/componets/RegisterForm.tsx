@@ -4,9 +4,11 @@ import Link from 'next/link';
 import {RegisterPayload} from "@/types/auth";
 import useAuthStore from "@/store/useAuthStore";
 
+interface RegisterFormProps {
+    onSuccess?: () => void;
+}
 
-
-const RegisterForm: React.FC = () => {
+const RegisterForm: React.FC<RegisterFormProps>= ({ onSuccess }) => {
     const registerUser = useAuthStore(state => (state as any).registerUser as (payload: RegisterPayload) => Promise<void>);
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
@@ -27,7 +29,7 @@ const RegisterForm: React.FC = () => {
             setIsLoading(true);
             const payload: RegisterPayload = { name, email, password,referralCode };
             await registerUser(payload);
-
+            if (onSuccess) onSuccess();
             setName('');
             setEmail('');
             setPassword('');
@@ -110,12 +112,13 @@ const RegisterForm: React.FC = () => {
                         <input
                             id="referralCode"
                             type="text"
-                            required
+                            //required
                             className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="Referral Code"
                             value={referralCode}
                             onChange={(e) => setReferralCode(e.target.value)}
                             disabled={isLoading}
+
                         />
                     </div>
 

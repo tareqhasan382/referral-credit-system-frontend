@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
+import { House, Box, ShoppingBag , Users, } from 'lucide-react';
 export default function SideNav() {
 
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
@@ -45,8 +45,13 @@ export default function SideNav() {
           {/* Top */}
           <div className="mt-4 relative pb-2">
             <div className="flex flex-col space-y-1">
-             <h1>Dashboard</h1>
+              {isSidebarExpanded? <h1 className={"font-bold"}>Dashboard</h1> :<House size={24} /> }
             </div>
+          </div>
+          <div className={" mt-10 gap-2 flex flex-col space-y-1 "}>
+            {isSidebarExpanded? <h1>Products</h1> :<Box size={24} /> }
+            {isSidebarExpanded? <h1>Orders</h1> :<ShoppingBag  size={24} /> }
+            {isSidebarExpanded? <h1>Customers</h1> :<Users  size={24} /> }
           </div>
           {/* Bottom */}
           

@@ -11,6 +11,7 @@ const Header = () => {
       <div className={"w-full"}>
         <TotalReferralUser/>
       </div>
+
     </header>
   );
 };

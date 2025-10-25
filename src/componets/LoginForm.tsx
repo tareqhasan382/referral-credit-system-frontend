@@ -1,10 +1,9 @@
 "use client"
 import React, {useCallback, useState} from 'react';
-import Link from 'next/link';
 import useAuthStore from "@/store/useAuthStore";
 import {LoginPayload} from "@/types/auth";
 
-const LoginForm: React.FC = () => {
+const LoginForm: React.FC = ({onClose}) => {
     const loginUser = useAuthStore(state => (state as any).loginUser as (payload: LoginPayload) => Promise<void>);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -23,6 +22,7 @@ const LoginForm: React.FC = () => {
             setIsLoading(true);
             const payload: LoginPayload = { email, password };
             await loginUser(payload);
+            onClose();
             setEmail('');
             setPassword('');
 

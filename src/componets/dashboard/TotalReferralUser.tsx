@@ -19,9 +19,9 @@ const TotalReferralUser = () => {
     );
     const { items, totalItems,totalPrice  } = useCartStore();
     const [isOpen, setIsOpen] = useState(false);
-    console.log("totalItems--->", totalItems);
-    console.log("items--->", items?.length);
-    console.log("totalPrice--->", totalPrice);
+    // console.log("totalItems--->", totalItems);
+    // console.log("items--->", items?.length);
+    // console.log("totalPrice--->", totalPrice);
 
     const handleClose = () => {
         setIsModalOpen(false);
@@ -29,7 +29,13 @@ const TotalReferralUser = () => {
     const handleDeactivate = () => {
         setIsModalOpen(false);
     };
-
+    useEffect(() => {
+        if (!user?.email) {
+            setIsModalOpen(true);
+        }else {
+            setIsModalOpen(false);
+        }
+    }, [user?.email]);
     const fetchReferrals = async () => {
         try {
             const res = await getReferrals();
@@ -121,7 +127,7 @@ const TotalReferralUser = () => {
                         <ShoppingBag size={22} />
                     </div>
                     <div>
-                        <p className="text-sm text-gray-500">Users Who Purchased</p>
+                        <p className="text-sm text-gray-500">Total Users Purchased</p>
                         <h3 className="text-2xl font-semibold text-gray-800">
                             {data?.referredUsersWhoPurchased ?? 0}
                         </h3>

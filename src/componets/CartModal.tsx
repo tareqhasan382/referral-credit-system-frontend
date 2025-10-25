@@ -1,7 +1,9 @@
 "use client";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { X } from "lucide-react";
 import useCartStore from "@/store/useCartStore";
+import usePurchaseStore from "@/store/usePurchesStore";
+import useAuthStore from "@/store/useAuthStore";
 
 interface CartModalProps {
     isOpen: boolean;
@@ -9,10 +11,44 @@ interface CartModalProps {
 }
 
 const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
+    const [loading, setLoading] = useState<boolean>(false);
+    const [message, setMessage] = useState<string | null>(null);
+
     const { items, totalPrice, removeFromCart, updateQuantity, clearCart } = useCartStore();
+    const purchaseOrder = usePurchaseStore(state => state.purchaseOrder); // properly typed
+    const user = useAuthStore(state => state.user);
+
+    const [isHydrated, setIsHydrated] = useState(false);
+    useEffect(() => {
+        setIsHydrated(true);
+    }, []);
 
     if (!isOpen) return null;
+    if (!isHydrated) return <div>Loading...</div>;
 
+    const handleConfirm = async () => {
+        if (items.length === 0 || !user?._id) return;
+
+        setLoading(true);
+        setMessage(null);
+
+        const payload: PurchasePayload = {
+            userId: user._id,
+            totalAmount: totalPrice,
+            items,
+        };
+
+        try {
+            await purchaseOrder(payload);
+            setMessage(" Order confirmed successfully!");
+            clearCart();
+        } catch (err: any) {
+            console.error(err);
+            setMessage(" Something went wrong, please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
             <div className="bg-white rounded-lg shadow-xl w-full max-w-sm mx-auto transform transition-all overflow-hidden flex flex-col max-h-[90vh]">
@@ -67,7 +103,14 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
                         ))
                     )}
                 </div>
-
+                <div className={" mb-4 px-4 w-full bg-amber-200"}>
+                    <button
+                        onClick={clearCart}
+                        className=" w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition"
+                    >
+                        Clear Cart
+                    </button>
+                </div>
                 {/* Footer */}
                 {items.length > 0 && (
                     <div className="px-4 py-3 border-t bg-gray-50 flex items-center justify-between">
@@ -76,10 +119,15 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
                             <p className="text-lg font-bold text-indigo-600">${totalPrice.toFixed(2)}</p>
                         </div>
                         <button
-                            onClick={clearCart}
-                            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition"
+                            onClick={handleConfirm}
+                            disabled={loading}
+                            className={`px-4 py-2 text-sm font-medium text-white rounded-md transition ${
+                                loading
+                                    ? "bg-indigo-400 cursor-not-allowed"
+                                    : "bg-indigo-600 hover:bg-indigo-700"
+                            }`}
                         >
-                            Clear Cart
+                            {loading ? "Confirming..." : "Confirm"}
                         </button>
                     </div>
                 )}

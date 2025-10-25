@@ -11,7 +11,6 @@ type AuthView = 'login' | 'register';
 
 const LoginModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     const [currentView, setCurrentView] = useState<AuthView>('login');
-
     if (!isOpen) {
         return null;
     }
@@ -24,7 +23,9 @@ const LoginModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
     const switchActionText = currentView === 'login' ? 'Sign Up' : 'Log In';
     const switchActionView: AuthView = currentView === 'login' ? 'register' : 'login';
-
+    const handleRegisterSuccess = () => {
+        setCurrentView('login');
+    };
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-75 p-4">
 
@@ -39,7 +40,7 @@ const LoginModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     <div className="space-y-4">
-                        {currentView === 'login' ? <LoginForm /> : <RegisterForm />}
+                        {currentView === 'login' ? <LoginForm onClose={onClose} /> : <RegisterForm  onSuccess={handleRegisterSuccess}/>}
                     </div>
                     <div className="mt-6 text-center text-sm">
                         <p>
