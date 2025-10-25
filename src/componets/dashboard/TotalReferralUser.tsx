@@ -7,16 +7,21 @@ import useAuthStore from "@/store/useAuthStore";
 import LoginModal from "@/componets/LoginModal";
 import useCartStore from "@/store/useCartStore";
 import CartModal from "@/componets/CartModal";
-
+interface ReferralStats {
+    totalReferredUsers: number;
+    referredUsersWhoPurchased: number;
+    totalCreditsEarned: number;
+}
 const TotalReferralUser = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [data, setData] = useState<string[] | null>(null);
+    const [data, setData] = useState<ReferralStats | null>(null);
     const [copied, setCopied] = useState<boolean>(false);
     const user = useAuthStore((state) => state.user);
     const token = useAuthStore((s) => s.token);
-    const getReferrals = useReferralStore(
-        (state) => (state as unknown).getReferrals as () => Promise<void>
-    );
+    // const getReferrals = useReferralStore(
+    //     (state) => (state as unknown).getReferrals as () => Promise<void>
+    // );
+    const getReferrals = useReferralStore((state) => state.getReferrals);
     const { items, totalItems,totalPrice  } = useCartStore();
     const [isOpen, setIsOpen] = useState(false);
     // console.log("totalItems--->", totalItems);

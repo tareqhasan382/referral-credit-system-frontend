@@ -4,12 +4,17 @@ import { X } from "lucide-react";
 import useCartStore from "@/store/useCartStore";
 import usePurchaseStore from "@/store/usePurchesStore";
 import useAuthStore from "@/store/useAuthStore";
-
+import { PurchasePayload } from '@/types/purchase';
 interface CartModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
-
+interface PurchaseStore {
+    purchaseOrder: (payload: PurchasePayload) => Promise<void>;
+}
+interface PurchaseStore {
+    purchaseOrder: (payload: PurchasePayload) => Promise<void>;
+}
 const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [message, setMessage] = useState<string | null>(null);

@@ -2,8 +2,10 @@
 import React, {useCallback, useState} from 'react';
 import useAuthStore from "@/store/useAuthStore";
 import {LoginPayload} from "@/types/auth";
-
-const LoginForm: React.FC = ({onClose}) => {
+interface LoginFormProps {
+    onClose: () => void;
+}
+const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
     const loginUser = useAuthStore(state => (state as any).loginUser as (payload: LoginPayload) => Promise<void>);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');

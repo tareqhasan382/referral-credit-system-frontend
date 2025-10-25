@@ -8,12 +8,14 @@ type User = {
     name: string;
     email: string;
     referralCode?: string;
+    accessToken?: string;
 };
 
 type AuthState = {
     user: User | null;
     token: string | null;
     loading: boolean;
+    accessToken: User | null;
     error: string | null;
     registerUser: (payload: RegisterPayload) => Promise<void>;
     loginUser: (payload: LoginPayload) => Promise<void>;
@@ -26,6 +28,7 @@ const useAuthStore = create<AuthState>()(
             (set) => ({
                 user: null,
                 token: null,
+                accessToken: null,
                 loading: false,
                 error: null,
 
@@ -35,7 +38,7 @@ const useAuthStore = create<AuthState>()(
                         const response = await apiFetch<{
                             success: boolean;
                             message: string;
-                            data: { user: User; token: string };
+                            data: { user: User; accessToken: string };
                         }>("/api/v1/auth/register", {
                             method: "POST",
                             body: JSON.stringify(payload),
@@ -54,7 +57,7 @@ const useAuthStore = create<AuthState>()(
                 loginUser: async (payload) => {
                     set({ loading: true, error: null });
                     try {
-                        const data = await apiFetch<{ data: { user: User; token: string } }>(
+                        const data = await apiFetch<{ data: { user: User; accessToken: string } }>(
                             "/api/v1/auth/login",
                             {
                                 method: "POST",

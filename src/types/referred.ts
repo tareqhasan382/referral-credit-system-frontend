@@ -1,9 +1,11 @@
+// src/store/types.ts
+
 // Define the structure for a single referred user
 export interface ReferredUser {
     name: string;
     email: string;
     credits: number;
-    status: 'pending' | 'credited' | 'purchased'; // Example statuses
+    status: 'pending' | 'credited' | 'purchased';
     createdAt: string; // ISO date string
 }
 
@@ -20,10 +22,9 @@ export interface ReferralState {
     referralData: ReferralData | null;
     loading: boolean;
     error: string | null;
-
-    // Action function signature
-    getReferrals: (payload?: any) => Promise<void>;
+    getReferrals: () => Promise<ReferralData | null>;
 }
+
 
 // Define the expected successful API response structure
 export interface ReferralApiResponse {
