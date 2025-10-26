@@ -1,3 +1,4 @@
+"use client"
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { LoginPayload, RegisterPayload } from "@/types/auth";
@@ -64,6 +65,7 @@ const useAuthStore = create<AuthState>()(
                                 body: JSON.stringify(payload),
                             }
                         );
+                        console.log("data--------->", data);
                         set({ user: data?.data?.user, token: data?.data?.accessToken });
                     } catch (err: any) {
                         set({ error: err.message });

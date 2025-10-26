@@ -1,7 +1,7 @@
 import useAuthStore from "@/store/useAuthStore";
 
 export const getBaseUrl = () => {
-    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    return process.env.NEXT_PUBLIC_API_URL || "https://referral-credit-system-nu.vercel.app" //"http://localhost:5000";
 };
 
 export async function apiFetch<T>(
