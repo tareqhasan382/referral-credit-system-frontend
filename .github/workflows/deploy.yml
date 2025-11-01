@@ -49,5 +49,5 @@ jobs:
             echo "Running container..."
             docker run -d \
               --name referral-credit-system-frontend \
-              -p 4173:3000 \
+              -p 4173:4173 \
               ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest

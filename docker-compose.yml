@@ -1,14 +1,9 @@
-- name: SSH to VPS and deploy
-  uses: appleboy/ssh-action@v1.2.0
-  with:
-    host: ${{ secrets.VPS_HOST }}
-    username: ${{ secrets.SSH_USERNAME }}
-    key: ${{ secrets.VPS_SSH_KEY }}
-    script: |
-      docker pull ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest
-      docker stop referral-credit-system-frontend || true
-      docker rm referral-credit-system-frontend || true
-      docker run -d \
-        --name referral-credit-system-frontend \
-        -p 4173:3000 \
-        ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tareqhasan382/referral-credit-system-frontend:latest
+    ports:
+      - "4173:4173"
+    restart: always
