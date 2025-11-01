@@ -6,8 +6,8 @@ import useCartStore from "@/store/useCartStore";
 const dummyProducts = [
     {
         id: 1,
-        name: "Wireless Headphones",
-        price: 129.99,
+        name: "Wireless Headphones Ss",
+        price: 130,
         rating: 4.8,
         image:
             "https://images.unsplash.com/photo-1580894908361-967195033215?auto=format&fit=crop&w=500&q=80",
