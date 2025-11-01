@@ -1,53 +1,53 @@
 name: CI/CD - Deploy Next.js Docker to VPS
 
 on:
-push:
-branches: [main]
+  push:
+    branches:
+      - main
 
 jobs:
-build_and_deploy:
-runs-on: ubuntu-latest
-  
-  ```
-steps:
-  # Step 1: Checkout the repository
-  - name: Checkout code
-    uses: actions/checkout@v4
+  build_and_deploy:
+    runs-on: ubuntu-latest
 
-  # Step 2: Log in to Docker Hub
-  - name: Log in to Docker Hub
-    uses: docker/login-action@v3
-    with:
-      username: ${{ secrets.DOCKER_USERNAME }}
-      password: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  # Step 3: Build and push Docker image
-  - name: Build and push Docker image
-    uses: docker/build-push-action@v5
-    with:
-      context: .
-      file: ./Dockerfile
-      push: true
-      tags: ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest
+      # Step 2: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-  # Step 4: SSH to VPS and deploy
-  - name: SSH to VPS and deploy
-    uses: appleboy/ssh-action@v1.2.0
-    with:
-      host: ${{ secrets.VPS_HOST }}
-      username: ${{ secrets.SSH_USERNAME }}
-      key: ${{ secrets.VPS_SSH_KEY }}
-      port: 22
-      script: |
-        echo "Pulling latest Docker image..."
-        docker pull ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest
+      # Step 3: Build and push Docker image
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest
 
-        echo "Stopping existing container if running..."
-        docker stop referral-credit-system-frontend || true
-        docker rm referral-credit-system-frontend || true
+      # Step 4: SSH to VPS and deploy
+      - name: SSH to VPS and deploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            echo "Pulling latest Docker image..."
+            docker pull ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest
 
-        echo "Running container..."
-        docker run -d \
-          --name referral-credit-system-frontend \
-          -p 4173:3000 \
-          ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest
+            echo "Stopping existing container if running..."
+            docker stop referral-credit-system-frontend || true
+            docker rm referral-credit-system-frontend || true
+
+            echo "Running container..."
+            docker run -d \
+              --name referral-credit-system-frontend \
+              -p 4173:3000 \
+              ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest
