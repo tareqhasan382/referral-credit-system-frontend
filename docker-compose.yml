@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 name: CI/CD - Deploy Next.js Docker to VPS
 
 on:
@@ -44,3 +45,19 @@ jobs:
               --name referral-credit-system-frontend \
               -p 4173:4173 \
               ${{ secrets.DOCKER_USERNAME }}/referral-credit-system-frontend:latest
+=======
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: referral-frontend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped
+>>>>>>> f1c3cb8c35cb836da727309e5812d5c602ae2e27
