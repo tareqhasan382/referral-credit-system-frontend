@@ -6,7 +6,7 @@ import useCartStore from "@/store/useCartStore";
 const dummyProducts = [
     {
         id: 1,
-        name: "Wireless Headphones Ss",
+        name: "Wireless Headphones",
         price: 130,
         rating: 4.8,
         image:
